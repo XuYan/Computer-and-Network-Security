@@ -1,0 +1,1 @@
+This is a short program I wrote the count how many bits are the same for two hash values after changing one bit in the original file.

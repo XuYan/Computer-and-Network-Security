@@ -1,0 +1,1 @@
+In both folders, the hash.c is my program. example.c is the example code given by material. a, b are two files used to test whether the first 24 bits are indeed the same after inputting "openssl dgst -md5 a" and "openssl dgst -md5 b" in command line.

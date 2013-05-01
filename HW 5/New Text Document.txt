@@ -1,0 +1,53 @@
+Any two outputs should be completely uncorrelated, no matter how similar the inputs are. So for instance, two inputs that differ by only one bit should have outputs that look like completely independently chosen random numbers. About half the bits in the two outputs should differ.
+
+
+
+
+???
+Given this property, a secure message digest function with n bits should be derivable from a message digest function with more than n bits merely by taking any particular subset of n bits from the larger message digest.
+???
+
+
+if the message digest has m bits, then it would take only about 2m/2 messages, chosen at random, before one would find two with the same value. (By Birthday Attack)
+
+If cryptographers were happy with message digest functions that merely made it infeasible to find a message with a particular prespecified digest (rather than being worried about being able to find any pair with the same digest), then a 64-bit digest would suffice.
+
+
+
+
+
+The Birthday Problem
+If there are 23 or more people in a room, the odds are better than 50% that two of them will have the same birthday. Analyzing this parlor trick can give us some insight into cryptography. We'll assume that a birthday is basically an unpredictable function taking a human to one of 365 values (yeah yeah, 366 for you nerds).
+
+Let's do this in a slightly more general way. Let's assume n inputs (which would be humans in the birthday example) and k possible outputs, and an unpredictable mapping from input to output. With n inputs, there are n(n-1)/2 pairs of inputs. For each pair there's a probability of 1/k of both inputs producing the same output value, so you'll need about k/2 pairs in order for the probability to be about 50% that you'll find a matching pair. That means that if n is greater than  , there's a good chance of finding a matching pair.
+
+
+
+Suppose Alice wants to fire Fred, and asks her diabolical secretary, Bob, who happens to be Fred's friend, to compose a letter explaining that Fred should be fired, and why. After Bob writes the letter, Alice will read it, compute a message digest, and cryptographically sign the message digest using her private key. Bob would like to instead write a letter saying that Fred is wonderful and his salary ought to be doubled. However, Bob cannot generate a message digest signed with Alice's key. If he can find two messages with the same message digest, one that Alice will look at and agree to sign because it captures what she'd like it to say, and one that says what Bob would like it to say, then Bob can substitute his own message after Alice generates the signed message digest.
+
+Suppose the message digest function has only 64 bits, and is a good message digest function in the sense of its output looking random. Then the only way to find two messages with the same message digest would be by trying enough messages so that by the birthday problem two would have the same digest.
+
+If Bob started by writing a letter that Alice would approve of, found the message digest of that, and then attempted to find a different message with that message digest, he'd have to try 264 different messages. However, suppose he had a way of generating lots of messages of each type (type 1Â?those that Alice would be willing to sign; type 2Â?those that Bob would like to send). Then by the birthday problem he'd only have to try about 232 messages of each type before he found two that matched. (See Homework Problem 3.)
+
+How can Bob possibly generate that many letters, especially since they'd all have to make sense to a human? Well, suppose there are 2 choices of wording in each of 32 places in the letter. Then there are 232 possible messages he can generate. For example:
+
+                                                       Type 1 message
+       I am writing {this memo|} to {demand | request | inform you} that {Fred | Mr. Fred Jones}
+{must |} be {fired | terminated}{at once | immediately}. As the {July 11 | 11 July} {memo | memorandum}
+{from | issued by} {personnel | human resources} states, to meet {our | the corporate}
+{quarterly | third quarter} budget {targets | goals}, {we must eliminate all discretionary spending |
+all discretionary spending must be eliminated}.
+       {Despite | Ignoring} that {memo | memorandum | order}, Fred {ordered | purchased} {PostIts
+| nonessential supplies} in a flagrant disregard for the company's {budgetary crisis | current
+financial difficulties}.
+                                                       Type 2 message
+I am writing {this letter | this memo | this memorandum | } to {officially | } commend Fred
+{Jones | } for his {courage and independent thinking | independent thinking and courage}. {He |
+Fred} {clearly | } understands {the need | how} to get {the | his} job {done | accomplished} {at all
+costs | by whatever means necessary}, and {knows | can see} when to ignore bureaucratic {nonsense
+| impediments}. I {am hereby recommending | hereby recommend} {him | Fred} for {promotion
+| immediate advancement} and {further | } recommend a {hefty | large} {salary |
+compensation} increase.
+
+There are enough computer-generatable variants of the two letters that Bob can compute message digests on the various variants until he finds a match. It is within computational feasibility to generate and test on the order of 232 messages, whereas it would not be feasible to deal with 264 messages.
+
